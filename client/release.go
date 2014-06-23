@@ -1,5 +1,3 @@
-// +build release
-
 package client
 
 import "net"

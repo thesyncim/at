@@ -1,4 +1,3 @@
-// +build release autoupdate
 package client
 
 import (
