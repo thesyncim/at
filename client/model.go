@@ -60,6 +60,8 @@ func newClientModel(config *Configuration, ctl mvc.Controller) *ClientModel {
 	protocols := []proto.Protocol{protoMap["http"], protoMap["tcp"]}
 
 	m := &ClientModel{
+		id: config.Id,
+
 		Logger: log.NewPrefixLogger("client"),
 
 		// server address

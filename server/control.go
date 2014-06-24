@@ -7,6 +7,7 @@ import (
 	"github.com/thesyncim/at/util"
 	"github.com/thesyncim/at/version"
 	"io"
+	"log"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -192,6 +193,10 @@ func (c *Control) manager() {
 			switch m := mRaw.(type) {
 			case *msg.ReqTunnel:
 				c.registerTunnel(m)
+				//new tunnels here
+				log.Println()
+				log.Println(m)
+				log.Println()
 
 			case *msg.Ping:
 				c.lastPing = time.Now()
