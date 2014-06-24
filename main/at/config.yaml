@@ -1,5 +1,9 @@
-id: cona
+id: thesyncim
 tunnels:
   ssh:
     proto: 
       tcp: 22
+  ssh2:
+    proto:
+      tcp: 22
+ 

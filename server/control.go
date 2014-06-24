@@ -2,12 +2,12 @@ package server
 
 import (
 	"fmt"
+
 	"github.com/thesyncim/at/conn"
 	"github.com/thesyncim/at/msg"
 	"github.com/thesyncim/at/util"
 	"github.com/thesyncim/at/version"
 	"io"
-	"log"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -20,6 +20,9 @@ const (
 	proxyStaleDuration  = 60 * time.Second
 	proxyMaxPoolSize    = 10
 )
+
+// Create a cache with a default expiration time of 5 minutes, and which
+// purges expired items every 30 seconds
 
 type Control struct {
 	// auth message
@@ -139,7 +142,6 @@ func (c *Control) registerTunnel(rawTunnelReq *msg.ReqTunnel) {
 			if len(c.tunnels) == 0 {
 				c.shutdown.Begin()
 			}
-
 			// we're done
 			return
 		}
@@ -182,6 +184,7 @@ func (c *Control) manager() {
 			if time.Since(c.lastPing) > pingTimeoutInterval {
 				c.conn.Info("Lost heartbeat")
 				c.shutdown.Begin()
+
 			}
 
 		case mRaw, ok := <-c.in:
@@ -194,9 +197,9 @@ func (c *Control) manager() {
 			case *msg.ReqTunnel:
 				c.registerTunnel(m)
 				//new tunnels here
-				log.Println()
-				log.Println(m)
-				log.Println()
+				//log.Println()
+				//log.Println(m, c.id)
+				//log.Println()
 
 			case *msg.Ping:
 				c.lastPing = time.Now()

@@ -47,6 +47,8 @@ func NewProxy(pxyConn conn.Conn, regPxy *msg.RegProxy) {
 		panic("No client found for identifier: " + regPxy.ClientId)
 	}
 
+	log.Debug("--------------------->", controlRegistry.All()["thesyncim"].tunnels)
+
 	ctl.RegisterProxy(pxyConn)
 }
 
