@@ -47,8 +47,6 @@ func NewProxy(pxyConn conn.Conn, regPxy *msg.RegProxy) {
 		panic("No client found for identifier: " + regPxy.ClientId)
 	}
 
-	log.Debug("--------------------->", controlRegistry.All()["thesyncim"].tunnels)
-
 	ctl.RegisterProxy(pxyConn)
 }
 
@@ -137,6 +135,8 @@ func Main() {
 	if opts.httpsAddr != "" {
 		listeners["https"] = startHttpListener(opts.httpsAddr, tlsConfig)
 	}
+
+	go InitRestInferface(controlRegistry)
 
 	// ngrok clients
 	tunnelListener(opts.tunnelAddr, tlsConfig)

@@ -3,7 +3,7 @@ tunnels:
   ssh:
     proto: 
       tcp: 22
-  ssh2:
+  thesyncim:
     proto:
-      tcp: 22
+       http: 80
  

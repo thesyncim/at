@@ -180,10 +180,16 @@ func (r *ControlRegistry) Get(clientId string) *Control {
 	return r.controls[clientId]
 }
 
-func (r *ControlRegistry) All() map[string]*Control {
+func (r *ControlRegistry) All() []*Control {
 	r.RLock()
 	defer r.RUnlock()
-	return r.controls
+
+	controls := []*Control{}
+	for _, control := range r.controls {
+		controls = append(controls, control)
+	}
+
+	return controls
 }
 
 func (r *ControlRegistry) Add(clientId string, ctl *Control) (oldCtl *Control) {
