@@ -13,6 +13,7 @@ import (
 	"log"
 	"mime"
 	"net/http"
+	"regexp"
 
 	"path/filepath"
 	"strings"
@@ -23,6 +24,7 @@ type NodeService struct {
 	Req msg.ReqTunnel
 }
 
+// +gen *
 type Node struct {
 	Id       string
 	LastPing time.Time
@@ -47,18 +49,24 @@ func (u NodeResource) Register(container *restful.Container) {
 		Operation("findNode").
 		Writes([]Node{})) // on the response
 
-	ws.Route(ws.GET("/{node-id}").To(u.findNode).
+	ws.Route(ws.GET("/{node-id}").To(u.getNode).
 		// docs
 		Doc("get a node ").
-		Operation("findNode").
+		Operation("getNode").
 		Param(ws.PathParameter("node-id", "identifier of the node").DataType("string")).
+		Writes(Node{})) // on the response
+	ws.Route(ws.GET("/search/{node-id}").To(u.searchNodes).
+		// docs
+		Doc("search a node ").
+		Operation("searchNode").
+		Param(ws.PathParameter("node-id", "query to search").DataType("string")).
 		Writes(Node{})) // on the response
 
 	container.Add(ws)
 }
 
 //
-func (n *NodeResource) findNode(request *restful.Request, response *restful.Response) {
+func (n *NodeResource) getNode(request *restful.Request, response *restful.Response) {
 
 	id := request.PathParameter("node-id")
 	control := n.clients.Get(id)
@@ -124,6 +132,57 @@ func (u *NodeResource) allNodes(request *restful.Request, response *restful.Resp
 	}
 
 	response.WriteAsJson(nodes)
+}
+
+func (u *NodeResource) searchNodes(request *restful.Request, response *restful.Response) {
+	id := request.PathParameter("node-id")
+	allnodes := u.clients.All()
+	log.Println("%v", allnodes)
+
+	nodes := []*Node{}
+
+	for _, node := range allnodes {
+
+		nodeservices := []NodeService{}
+
+		for _, tunnel := range node.tunnels {
+
+			service := NodeService{}
+			service.Req = msg.ReqTunnel{}
+			service.Req = *tunnel.req
+
+			service.Url = tunnel.url
+
+			nodeservices = append(nodeservices, service)
+		}
+
+		node := Node{
+			Id:       node.id,
+			LastPing: node.lastPing,
+		}
+		node.Services = []NodeService{}
+		node.Services = nodeservices
+
+		nodes = append(nodes, &node)
+
+	}
+
+	nameMatch := func(n *Node) bool {
+		res, err := regexp.MatchString(id, n.Id)
+		if err != nil {
+			log.Println("we got an error")
+		}
+		return res
+	}
+	nod := Nodes(nodes)
+	searchResults := nod.Where(nameMatch)
+	if searchResults == nil {
+		response.Write([]byte("[]"))
+		return
+	}
+
+	response.WriteAsJson(searchResults)
+
 }
 
 func InitRestInferface(c *ControlRegistry) {
