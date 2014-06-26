@@ -3,7 +3,8 @@ package client
 import (
 	"flag"
 	"fmt"
-	"github.com/thesyncim/at/version"
+	"path/filepath"
+	//"github.com/thesyncim/at/version"
 	"os"
 )
 
@@ -13,23 +14,7 @@ Options:
 
 const usage2 string = `
 Examples:
-	ngrok 80
-	ngrok -subdomain=example 8080
-	ngrok -proto=tcp 22
-	ngrok -hostname="example.com" -httpauth="user:password" 10.0.0.1
-
-
-Advanced usage: ngrok [OPTIONS] <command> [command args] [...]
-Commands:
-	ngrok start [tunnel] [...]    Start tunnels by name from config file
-	ngrok help                    Print help
-	ngrok version                 Print ngrok version
-
-Examples:
-	ngrok start www api blog pubsub
-	ngrok -log=stdout -config=ngrok.yml start ssh
-	ngrok version
-
+	at -config config.yaml
 `
 
 type Options struct {
@@ -45,6 +30,7 @@ type Options struct {
 }
 
 func ParseArgs() (opts *Options, err error) {
+
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, usage1, os.Args[0])
 		flag.PrintDefaults()
@@ -52,8 +38,7 @@ func ParseArgs() (opts *Options, err error) {
 	}
 
 	config := flag.String(
-		"config",
-		"",
+		"config", filepath.Join(execdir+"config.yaml"),
 		"Path to ngrok configuration file. (default: $HOME/.ngrok)")
 
 	logto := flag.String(
@@ -65,26 +50,6 @@ func ParseArgs() (opts *Options, err error) {
 		"authtoken",
 		"",
 		"Authentication token for identifying an ngrok.com account")
-
-	httpauth := flag.String(
-		"httpauth",
-		"",
-		"username:password HTTP basic auth creds protecting the public tunnel endpoint")
-
-	subdomain := flag.String(
-		"subdomain",
-		"",
-		"Request a custom subdomain from the ngrok server. (HTTP only)")
-
-	hostname := flag.String(
-		"hostname",
-		"",
-		"Request a custom hostname from the ngrok server. (HTTP only) (requires CNAME of your DNS)")
-
-	protocol := flag.String(
-		"proto",
-		"http+https",
-		"The protocol of the traffic over the tunnel {'http', 'https', 'tcp'} (default: 'http+https')")
 
 	flag.Parse()
 
@@ -99,7 +64,7 @@ func ParseArgs() (opts *Options, err error) {
 		command:   flag.Arg(0),
 	}
 
-	switch opts.command {
+	/*switch opts.command {
 	case "start":
 		opts.args = flag.Args()[1:]
 	case "version":
@@ -109,9 +74,13 @@ func ParseArgs() (opts *Options, err error) {
 		flag.Usage()
 		os.Exit(0)
 	case "":
-		err = fmt.Errorf("Error: Specify a local port to tunnel to, or " +
-			"an ngrok command.\n\nExample: To expose port 80, run " +
-			"'ngrok 80'")
+		if opts.config == "" {
+			err = fmt.Errorf("Error: Specify a local port to tunnel to, or " +
+				"an AnnyTunnel command.\n\nExample: To expose port 80, run " +
+				"'at 80'")
+
+		}
+
 		return
 
 	default:
@@ -124,7 +93,7 @@ func ParseArgs() (opts *Options, err error) {
 
 		opts.command = "default"
 		opts.args = flag.Args()
-	}
+	}*/
 
 	return
 }

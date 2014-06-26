@@ -6,8 +6,8 @@ import (
 
 import (
 	"bytes"
-	"github.com/HorizontDimension/go-restful/swagger"
 	"github.com/emicklei/go-restful"
+	"github.com/emicklei/go-restful/swagger"
 	"github.com/thesyncim/at/msg"
 	"io"
 	"log"
@@ -29,6 +29,19 @@ type Node struct {
 	Id       string
 	LastPing time.Time
 	Services []NodeService
+}
+
+// Nodes is a slice of type *Node. Use it where you would use []*Node.
+type Nodes []*Node
+
+// Where returns a new Nodes slice whose elements return true for func. See: http://clipperhouse.github.io/gen/#Where
+func (rcv Nodes) Where(fn func(*Node) bool) (result Nodes) {
+	for _, v := range rcv {
+		if fn(v) {
+			result = append(result, v)
+		}
+	}
+	return result
 }
 
 type NodeResource struct {
@@ -103,7 +116,7 @@ func (u *NodeResource) allNodes(request *restful.Request, response *restful.Resp
 	allnodes := u.clients.All()
 	log.Println("%v", allnodes)
 
-	nodes := []Node{}
+	nodes := Nodes{}
 
 	for _, node := range allnodes {
 
@@ -127,7 +140,7 @@ func (u *NodeResource) allNodes(request *restful.Request, response *restful.Resp
 		node.Services = []NodeService{}
 		node.Services = nodeservices
 
-		nodes = append(nodes, node)
+		nodes = append(nodes, &node)
 
 	}
 
@@ -139,7 +152,7 @@ func (u *NodeResource) searchNodes(request *restful.Request, response *restful.R
 	allnodes := u.clients.All()
 	log.Println("%v", allnodes)
 
-	nodes := []*Node{}
+	nodes := Nodes{}
 
 	for _, node := range allnodes {
 
@@ -174,8 +187,8 @@ func (u *NodeResource) searchNodes(request *restful.Request, response *restful.R
 		}
 		return res
 	}
-	nod := Nodes(nodes)
-	searchResults := nod.Where(nameMatch)
+
+	searchResults := nodes.Where(nameMatch)
 	if searchResults == nil {
 		response.Write([]byte("[]"))
 		return
@@ -220,7 +233,7 @@ func InitRestInferface(c *ControlRegistry) {
 
 	swagger.RegisterSwaggerService(config, wsContainer)
 
-	log.Printf("start listening on localhost:8080")
+	log.Printf("start listening on proxy.euroneves.pt:8080")
 	//server := &http.Server{Addr: ":80", Handler: wsContainer}
 	//log.Fatal(server.ListenAndServe())
 
