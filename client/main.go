@@ -107,6 +107,7 @@ func Main() {
 		go doWork(config)
 		return nil
 	}, func() error {
+		os.Exit(0)
 		// stop
 		//stopWork()
 		return nil
