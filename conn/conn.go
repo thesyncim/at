@@ -140,7 +140,7 @@ func DialHttpProxy(proxyUrl, addr, typ string, tlsCfg *tls.Config) (conn *logged
 	if proxyAuth != "" {
 		req.Header.Set("Proxy-Authorization", proxyAuth)
 	}
-	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; ngrok)")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; AnyTunnel)")
 	req.Write(conn)
 
 	// read the proxy's response

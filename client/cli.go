@@ -39,7 +39,7 @@ func ParseArgs() (opts *Options, err error) {
 
 	config := flag.String(
 		"config", filepath.Join(execdir+"config.yaml"),
-		"Path to ngrok configuration file. (default: $HOME/.ngrok)")
+		"Path to AnyTunnel configuration file. (default: cinfig.yaml)")
 
 	logto := flag.String(
 		"log",
@@ -49,7 +49,7 @@ func ParseArgs() (opts *Options, err error) {
 	authtoken := flag.String(
 		"authtoken",
 		"",
-		"Authentication token for identifying an ngrok.com account")
+		"Authentication token for identifying an proxy.euroneves.pt account")
 
 	flag.Parse()
 
@@ -59,37 +59,5 @@ func ParseArgs() (opts *Options, err error) {
 		authtoken: *authtoken,
 		command:   flag.Arg(0),
 	}
-
-	/*switch opts.command {
-	case "start":
-		opts.args = flag.Args()[1:]
-	case "version":
-		fmt.Println(version.MajorMinor())
-		os.Exit(0)
-	case "help":
-		flag.Usage()
-		os.Exit(0)
-	case "":
-		if opts.config == "" {
-			err = fmt.Errorf("Error: Specify a local port to tunnel to, or " +
-				"an AnnyTunnel command.\n\nExample: To expose port 80, run " +
-				"'at 80'")
-
-		}
-
-		return
-
-	default:
-		if len(flag.Args()) > 1 {
-			err = fmt.Errorf("You may only specify one port to tunnel to on the command line, got %d: %v",
-				len(flag.Args()),
-				flag.Args())
-			return
-		}
-
-		opts.command = "default"
-		opts.args = flag.Args()
-	}*/
-
 	return
 }

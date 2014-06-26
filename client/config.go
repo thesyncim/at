@@ -94,6 +94,7 @@ func LoadConfiguration(opts *Options) (config *Configuration, err error) {
 		err = fmt.Errorf("Error parsing configuration file %s: %v", configPath, err)
 		return
 	}
+	config.InspectAddr = "disabled"
 
 	// try to parse the old .ngrok format for backwards compatibility
 	matched := false

@@ -30,8 +30,8 @@ func init() {
 
 func Main() {
 	//os service
-	var name = "anytunnel"
-	var displayName = "anytunnel"
+	var name = "Anytunnel"
+	var displayName = "Anytunnel"
 	var desc = "Introspected tunnels to localhost"
 	var s service.Service
 
@@ -100,20 +100,21 @@ func Main() {
 			return
 		}
 		fmt.Printf("Service \"%s\" stopped.\n", displayName)
+	default:
+		err = s.Run(func() error {
+			// start
+			go doWork(config)
+			return nil
+		}, func() error {
+			os.Exit(0)
+			// stop
+			//stopWork()
+			return nil
+		})
+		if err != nil {
+			s.Error(err.Error())
+		}
 
-	}
-	err = s.Run(func() error {
-		// start
-		go doWork(config)
-		return nil
-	}, func() error {
-		os.Exit(0)
-		// stop
-		//stopWork()
-		return nil
-	})
-	if err != nil {
-		s.Error(err.Error())
 	}
 
 }
