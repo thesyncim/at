@@ -1,11 +1,5 @@
-id: thesyncim
+id: thesyncimUnix
 tunnels:
-  ssh:
+  sshonly:
     proto: 
       tcp: 22
-  thesyncim:
-    proto:
-       http: 8000
-  rdp:
-     proto:
-       http: 3389
