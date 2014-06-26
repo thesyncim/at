@@ -56,11 +56,7 @@ func ParseArgs() (opts *Options, err error) {
 	opts = &Options{
 		config:    *config,
 		logto:     *logto,
-		httpauth:  *httpauth,
-		subdomain: *subdomain,
-		protocol:  *protocol,
 		authtoken: *authtoken,
-		hostname:  *hostname,
 		command:   flag.Arg(0),
 	}
 
