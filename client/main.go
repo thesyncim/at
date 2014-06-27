@@ -2,7 +2,6 @@ package client
 
 import (
 	"bitbucket.org/kardianos/osext"
-	"bitbucket.org/kardianos/service"
 	"fmt"
 	"github.com/inconshreveable/mousetrap"
 	"github.com/thesyncim/at/log"
@@ -14,7 +13,6 @@ import (
 	"time"
 )
 
-var logos service.Logger
 var execdir, _ = osext.ExecutableFolder()
 
 func init() {
@@ -29,19 +27,7 @@ func init() {
 }
 
 func Main() {
-	//os service
-	var name = "Anytunnel"
-	var displayName = "Anytunnel"
-	var desc = "Introspected tunnels to localhost"
-	var s service.Service
 
-	s, err := service.NewService(name, displayName, desc)
-	logos = s
-
-	if err != nil {
-		fmt.Printf("%s unable to start: %s", displayName, err)
-		return
-	}
 	// parse options
 	opts, err := ParseArgs()
 	if err != nil {
@@ -67,62 +53,6 @@ func Main() {
 	}
 	rand.Seed(seed)
 
-	switch opts.command {
-	case "install":
-		err = s.Install()
-		if err != nil {
-			fmt.Printf("Failed to install: %s\n", err)
-			return
-		}
-		fmt.Printf("Service \"%s\" installed.\n", displayName)
-	case "remove":
-		err = s.Remove()
-		if err != nil {
-			fmt.Printf("Failed to remove: %s\n", err)
-			return
-		}
-		fmt.Printf("Service \"%s\" removed.\n", displayName)
-	case "run":
-		doWork(config)
-
-		//continue
-	case "start":
-		err = s.Start()
-		if err != nil {
-			fmt.Printf("Failed to start: %s\n", err)
-			return
-		}
-		fmt.Printf("Service \"%s\" started.\n", displayName)
-	case "stop":
-		err = s.Stop()
-		if err != nil {
-			fmt.Printf("Failed to stop: %s\n", err)
-			return
-		}
-		fmt.Printf("Service \"%s\" stopped.\n", displayName)
-	default:
-		err = s.Run(func() error {
-			// start
-			go doWork(config)
-			return nil
-		}, func() error {
-			os.Exit(0)
-			// stop
-			//stopWork()
-			return nil
-		})
-		if err != nil {
-			s.Error(err.Error())
-		}
-
-	}
-
-}
-
-func doWork(c *Configuration) {
-	NewController().Run(c)
-
-}
-func stopWork() {
+	NewController().Run(config)
 
 }
