@@ -3,6 +3,13 @@ package client
 import (
 	"crypto/tls"
 	"fmt"
+	"io/ioutil"
+	"math"
+	"runtime"
+	"strings"
+	"sync/atomic"
+	"time"
+
 	metrics "github.com/rcrowley/go-metrics"
 	"github.com/thesyncim/at/client/mvc"
 	"github.com/thesyncim/at/conn"
@@ -11,16 +18,10 @@ import (
 	"github.com/thesyncim/at/proto"
 	"github.com/thesyncim/at/util"
 	"github.com/thesyncim/at/version"
-	"io/ioutil"
-	"math"
-	"runtime"
-	"strings"
-	"sync/atomic"
-	"time"
 )
 
 const (
-	defaultServerAddr   = "proxy.euroneves.pt:4443"
+	defaultServerAddr   = "insync.alpeca3d.com:4443"
 	pingInterval        = 20 * time.Second
 	maxPongLatency      = 15 * time.Second
 	updateCheckInterval = 6 * time.Hour
