@@ -223,7 +223,7 @@ func InitRestInferface(c *ControlRegistry) {
 	// Open http://localhost:8080/apidocs and enter http://localhost:8080/apidocs.json in the api input field.
 	config := swagger.Config{
 		WebServices:    wsContainer.RegisteredWebServices(), // you control what services are visible
-		WebServicesUrl: "http://proxy.euroneves.pt:8081",
+		WebServicesUrl: "http://proxy.alpeca3d.com:8081",
 		ApiPath:        "/apidocs.json",
 
 		// Optionally, specifiy where the UI is located
@@ -234,7 +234,7 @@ func InitRestInferface(c *ControlRegistry) {
 
 	swagger.RegisterSwaggerService(config, wsContainer)
 
-	log.Printf("start listening on proxy.euroneves.pt:8081")
+	log.Printf("start listening on proxy.alpeca3d.com:8081")
 	//server := &http.Server{Addr: ":80", Handler: wsContainer}
 	//log.Fatal(server.ListenAndServe())
 

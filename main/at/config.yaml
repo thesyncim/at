@@ -1,5 +1,0 @@
-id: thesyncimUnix
-tunnels:
-  sshonly:
-    proto: 
-      tcp: 22

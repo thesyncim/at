@@ -49,7 +49,7 @@ func ParseArgs() (opts *Options, err error) {
 	authtoken := flag.String(
 		"authtoken",
 		"",
-		"Authentication token for identifying an proxy.euroneves.pt account")
+		"Authentication token for identifying an proxy.alpeca3d.com account")
 
 	flag.Parse()
 
