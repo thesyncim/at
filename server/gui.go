@@ -6,14 +6,15 @@ import (
 
 import (
 	"bytes"
-	"github.com/emicklei/go-restful"
-	"github.com/emicklei/go-restful/swagger"
-	"github.com/thesyncim/at/msg"
 	"io"
 	"log"
 	"mime"
 	"net/http"
 	"regexp"
+
+	"github.com/emicklei/go-restful"
+	"github.com/emicklei/go-restful/swagger"
+	"github.com/thesyncim/at/msg"
 
 	"path/filepath"
 	"strings"
@@ -222,7 +223,7 @@ func InitRestInferface(c *ControlRegistry) {
 	// Open http://localhost:8080/apidocs and enter http://localhost:8080/apidocs.json in the api input field.
 	config := swagger.Config{
 		WebServices:    wsContainer.RegisteredWebServices(), // you control what services are visible
-		WebServicesUrl: "http://proxy.euroneves.pt:8080",
+		WebServicesUrl: "http://proxy.euroneves.pt:8081",
 		ApiPath:        "/apidocs.json",
 
 		// Optionally, specifiy where the UI is located
@@ -233,11 +234,11 @@ func InitRestInferface(c *ControlRegistry) {
 
 	swagger.RegisterSwaggerService(config, wsContainer)
 
-	log.Printf("start listening on proxy.euroneves.pt:8080")
+	log.Printf("start listening on proxy.euroneves.pt:8081")
 	//server := &http.Server{Addr: ":80", Handler: wsContainer}
 	//log.Fatal(server.ListenAndServe())
 
-	log.Fatalln(http.ListenAndServe(":8080", wsContainer))
+	log.Fatalln(http.ListenAndServe(":8081", wsContainer))
 }
 
 type BinaryHandler struct {
